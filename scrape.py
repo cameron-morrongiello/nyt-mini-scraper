@@ -187,7 +187,7 @@ def post_current_standing_to_discord_webhook(times_doc):
 
 def main(event=None, context=None):
     try:
-        username = os.environ.get('nyt_username')
+        username = os.environ.get('NYT_USERNAME')
         password = os.environ.get('nyt_password')
         print('Password: ', password)
         print('User: ', username)
