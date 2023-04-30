@@ -8,6 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NYT_USERNAME: ${{ secrets.NYT_USERNAME }}
+      NYT_PASSWORD: ${{ secrets.NYT_PASSWORD }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
     steps:
       - name: checkout repo content
         uses: actions/checkout@v2 # checkout the repository content
