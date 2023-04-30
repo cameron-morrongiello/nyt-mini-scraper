@@ -6,10 +6,9 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo import errors
 import os
-import socket
 
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -18,9 +17,6 @@ DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
 
 
 def get_cookie(username, password):
-    proxies = {
-        "https": "https://34.125.205.223:8585"
-    }
     login_resp = requests.post(
         'https://myaccount.nytimes.com/svc/ios/v2/login',
         data={
@@ -30,12 +26,9 @@ def get_cookie(username, password):
         headers={
             'User-Agent': 'Crosswords/20191213190708 CFNetwork/1128.0.1 Darwin/19.6.0',
             'client_id': 'ios.crosswords',
-        },
-        # proxies=proxies
+        }
     )
-    print("hello")
     login_resp.raise_for_status()
-    print('hi')
     for cookie in login_resp.json()['data']['cookies']:
         if cookie['name'] == 'NYT-S':
             return cookie['cipheredValue']
@@ -88,7 +81,7 @@ def scrape_leaderboard(cookie):
 
 def enter_times_in_db(timestamp, weekday, entries):
     try:
-        uri = os.environ.get('mongo_uri')
+        uri = os.environ.get('MONGO_URI')
 
         # Create a new client and connect to the server
         client = MongoClient(uri, server_api=ServerApi('1'))
@@ -138,7 +131,7 @@ def enter_times_in_db(timestamp, weekday, entries):
 
 def post_new_times_to_discord_webhook(new_times):
 
-    webhook_url = os.environ.get('discord_webhook')
+    webhook_url = os.environ.get('DISCORD_WEBHOOK')
     for username, time in new_times.items():
         try:
             # Prepare the data to be sent to the webhook
@@ -156,7 +149,7 @@ def post_new_times_to_discord_webhook(new_times):
 
 
 def post_current_standing_to_discord_webhook(times_doc):
-    webhook_url = os.environ.get('discord_webhook')
+    webhook_url = os.environ.get('DISCORD_WEBHOOK')
 
     sorted_times = dict(
         sorted(times_doc['entries'].items(), key=lambda x: x[1]))
@@ -185,21 +178,22 @@ def post_current_standing_to_discord_webhook(times_doc):
         raise e
 
 
-def main(event=None, context=None):
+def main():
     try:
-        username = os.environ.get('nyt_username')
-        password = os.environ.get('nyt_password')
+        username = os.environ.get('NYT_USERNAME')
+        password = os.environ.get('NYT_PASSWORD')
         cookie = get_cookie(username, password)
-        print(cookie)
         timestamp, weekday, entries = scrape_leaderboard(cookie)
-        print(entries)
         if entries:
+            print(entries)
             doc, new_times = enter_times_in_db(timestamp, weekday, entries)
             print(new_times)
-            # if new_times:
-            #     # if there is new times, post it to discord
-            #     post_new_times_to_discord_webhook(new_times)
-            #     post_current_standing_to_discord_webhook(doc)
+            if new_times:
+                # if there is new times, post it to discord
+                post_new_times_to_discord_webhook(new_times)
+                post_current_standing_to_discord_webhook(doc)
+        else:
+            print("No entries")
     except Exception as e:
         print(e)
 
