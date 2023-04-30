@@ -189,6 +189,8 @@ def main(event=None, context=None):
     try:
         username = os.environ.get('nyt_username')
         password = os.environ.get('nyt_password')
+        print('Password: ', password)
+        print('User: ', username)
         cookie = get_cookie(username, password)
         print(cookie)
         timestamp, weekday, entries = scrape_leaderboard(cookie)
