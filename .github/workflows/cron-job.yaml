@@ -3,6 +3,7 @@ name: run scraper.py
 on:
   schedule:
     - cron: '5 * * * *'
+  workflow_dispatch: # Added workflow_dispatch trigger
 
 jobs:
   build:
