@@ -1,22 +1,31 @@
-name: Python Cron
+name: run scraper.py
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # run every 5 mins, regardless of the day
+    - cron: '5 * * * *'
+  workflow_dispatch: # Added workflow_dispatch trigger
 
 jobs:
-  run-python:
+  build:
     runs-on: ubuntu-latest
+    env:
+      NYT_USERNAME: ${{ secrets.NYT_USERNAME }}
+      NYT_PASSWORD: ${{ secrets.NYT_PASSWORD }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content
+
+      - name: setup python
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
-      - name: Install dependencies
+          python-version: '3.7' # install the python version needed
+
+      - name: install python packages
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run Python code
+
+      - name: execute py script # run main.py
         run: python scrape.py
