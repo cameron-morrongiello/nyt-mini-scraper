@@ -18,10 +18,7 @@ DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
 
 
 def get_cookie(username, password):
-    proxies = {
-        "https": "https://34.125.205.223:8585"
-    }
-    login_resp = requests.post(
+  login_resp = requests.post(
         'https://myaccount.nytimes.com/svc/ios/v2/login',
         data={
             'login': username,
@@ -88,7 +85,7 @@ def scrape_leaderboard(cookie):
 
 def enter_times_in_db(timestamp, weekday, entries):
     try:
-        uri = os.environ.get('mongo_uri')
+        uri = os.environ.get('MONGO_URI')
 
         # Create a new client and connect to the server
         client = MongoClient(uri, server_api=ServerApi('1'))
@@ -138,7 +135,7 @@ def enter_times_in_db(timestamp, weekday, entries):
 
 def post_new_times_to_discord_webhook(new_times):
 
-    webhook_url = os.environ.get('discord_webhook')
+    webhook_url = os.environ.get('DISCORD_WEBHOOK')
     for username, time in new_times.items():
         try:
             # Prepare the data to be sent to the webhook
@@ -156,7 +153,7 @@ def post_new_times_to_discord_webhook(new_times):
 
 
 def post_current_standing_to_discord_webhook(times_doc):
-    webhook_url = os.environ.get('discord_webhook')
+    webhook_url = os.environ.get('DISCORD_WEBHOOK')
 
     sorted_times = dict(
         sorted(times_doc['entries'].items(), key=lambda x: x[1]))
@@ -188,7 +185,7 @@ def post_current_standing_to_discord_webhook(times_doc):
 def main(event=None, context=None):
     try:
         username = os.environ.get('NYT_USERNAME')
-        password = os.environ.get('nyt_password')
+        password = os.environ.get('NYT_PASSWORD')
         print('Password: ', password)
         print('User: ', username)
         cookie = get_cookie(username, password)
