@@ -196,10 +196,10 @@ def main(event=None, context=None):
         if entries:
             doc, new_times = enter_times_in_db(timestamp, weekday, entries)
             print(new_times)
-            # if new_times:
-            #     # if there is new times, post it to discord
-            #     post_new_times_to_discord_webhook(new_times)
-            #     post_current_standing_to_discord_webhook(doc)
+            if new_times:
+                # if there is new times, post it to discord
+                post_new_times_to_discord_webhook(new_times)
+                post_current_standing_to_discord_webhook(doc)
     except Exception as e:
         print(e)
 
