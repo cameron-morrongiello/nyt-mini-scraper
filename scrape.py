@@ -8,8 +8,8 @@ from pymongo import errors
 import os
 import socket
 
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
