@@ -18,7 +18,7 @@ DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
 
 
 def get_cookie(username, password):
-  login_resp = requests.post(
+    login_resp = requests.post(
         'https://myaccount.nytimes.com/svc/ios/v2/login',
         data={
             'login': username,
@@ -27,8 +27,7 @@ def get_cookie(username, password):
         headers={
             'User-Agent': 'Crosswords/20191213190708 CFNetwork/1128.0.1 Darwin/19.6.0',
             'client_id': 'ios.crosswords',
-        },
-        # proxies=proxies
+        }
     )
     print("hello")
     login_resp.raise_for_status()
