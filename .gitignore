@@ -2,3 +2,5 @@
 .env
 packages
 .DS_Store
+
+__pycache__

@@ -7,16 +7,14 @@ from pymongo.server_api import ServerApi
 from pymongo import errors
 import os
 
+from utils import format_time
+
 # from dotenv import load_dotenv
 # load_dotenv()
 
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-
-def format_time(seconds):
-    minutes, seconds = divmod(seconds, 60)
-    return f"{minutes:02d}:{seconds:02d}"
 
 # Modified from: https://github.com/pjflanagan/nyt-crossword-plus/blob/main/scrape/main.py
 
