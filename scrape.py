@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as soup
 import calendar
@@ -15,9 +15,8 @@ DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
 
 
 def format_time(seconds):
-    time = str(datetime.timedelta(seconds=seconds))
-    hours, minutes, seconds = time.split(":")
-    return f"{int(hours):02d}:{int(minutes):02d}"
+    minutes, seconds = divmod(seconds, 60)
+    return f"{minutes:02d}:{seconds:02d}"
 
 # Modified from: https://github.com/pjflanagan/nyt-crossword-plus/blob/main/scrape/main.py
 
