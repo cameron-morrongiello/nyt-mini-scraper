@@ -8,8 +8,8 @@ import os
 
 from utils import format_time
 
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 def get_previous_nyt_mini_timestamp():
