@@ -13,6 +13,12 @@ import os
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
 
+
+def format_time(seconds):
+    time = str(datetime.timedelta(seconds=seconds))
+    hours, minutes, seconds = time.split(":")
+    return f"{int(hours):02d}:{int(minutes):02d}"
+
 # Modified from: https://github.com/pjflanagan/nyt-crossword-plus/blob/main/scrape/main.py
 
 
@@ -136,7 +142,7 @@ def post_new_times_to_discord_webhook(new_times):
         try:
             # Prepare the data to be sent to the webhook
             data = {
-                'content': f'{username} completed the Mini in {time}s',
+                'content': f'{username} completed the Mini in {format_time(time)}',
             }
 
             # Send the POST request to the webhook URL
@@ -158,7 +164,7 @@ def post_current_standing_to_discord_webhook(times_doc):
 
     place = 1
     for username, time in sorted_times.items():
-        description_str += f"{place}. {username} - {time}s\n"
+        description_str += f"{place}. {username} - {format_time(time)}\n"
         place += 1
 
     try:
