@@ -2,8 +2,8 @@ name: run notify.py
 
 on:
   schedule:
-    - cron: "5 2 * * 1-5"
-    - cron: "5 22 * * 6-7"
+    - cron: '5 2 * * 1-5'
+    - cron: '5 22 * * SAT-SUN'
   workflow_dispatch: # Added workflow_dispatch trigger
 
 jobs:
