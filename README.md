@@ -1,4 +1,4 @@
-# NYT Mini Crossword Times Scraper
+# NYT Mini Crossword Leaderboard Scraper
 
 This is a Python script that scrapes the NYT Mini Crossword leaderboard and stores the times of the solvers in a MongoDB database. The script uses the NYT-S cookie to authenticate and access the leaderboard. It will run every hour checking for new times from your friends and post to your Discord server via a webhook. After the new Mini is released (10 PM ET on the weekdays, 6 PM ET on the weekends), a final report from the previous Mini will be posted to the server as well. This report tracks overall wins and current win streak.
 
