@@ -7,10 +7,10 @@ This is a Python script that scrapes the NYT Mini Crossword leaderboard and stor
 1. Clone the repo by running the following command in your terminal:
 
    ```
-   git clone https://github.com/<your-username>/nyt-mini-crossword-scraper.git
+   git clone https://github.com/cameron-morrongiello/nyt-mini-scraper.git
    ```
 
-2. Get a MongoDB URI and put it into Github secrets as `MONGO_URI`. You can use services like [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) to create a free MongoDB cluster.
+2. Get a MongoDB URI and put it into Github secrets as `MONGO_URI`. You can use services like [MongoDB Atlas](https://www.mongodb.com/atlas/database) to create a free MongoDB cluster.
 
 3. Get a Discord webhook for the channel you want the updates in and put it into Github secrets as `DISCORD_WEBHOOK`. You can follow [these instructions](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) to create a webhook for your Discord server.
 
