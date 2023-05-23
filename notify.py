@@ -1,12 +1,11 @@
-from datetime import datetime, timedelta
-import pytz
+from datetime import datetime
 import requests
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo import errors
 import os
 
-from utils import format_time
+from utils import format_time, get_previous_nyt_mini_timestamp
 
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -15,33 +14,6 @@ if not os.getenv('GITHUB_ACTIONS'):
     # Code is running locally
     from dotenv import load_dotenv
     load_dotenv()
-
-
-def get_previous_nyt_mini_timestamp() -> datetime.date:
-    """
-    Calculates the timestamp of the previous New York Times Mini puzzle.
-
-    Returns:
-        puzzle_date (datetime.date): A date object representing the date of the previous
-            New York Times Mini puzzle.
-    """
-    # Set the timezone to Eastern Time
-    et_timezone = pytz.timezone('US/Eastern')
-
-    # Get the current time in Eastern Time
-    et_time = datetime.now(et_timezone)
-
-    # Check if it's a weekend and the time is past 6 pm ET
-    if et_time.weekday() >= 5 and et_time.hour >= 18:
-        puzzle_date = et_time.date()
-    # Check if it's a weekday and the time is past 10 pm ET
-    elif et_time.weekday() < 5 and et_time.hour >= 22:
-        puzzle_date = et_time.date()
-    else:
-        # Otherwise, use the current date minus a day for prev's puzzle
-        puzzle_date = et_time.date() - timedelta(days=1)
-
-    return puzzle_date
 
 
 def update_winners_collection(timestamp) -> tuple:
@@ -102,6 +74,8 @@ def update_winners_collection(timestamp) -> tuple:
     except errors.ConnectionFailure as e:
         raise e
     except errors.OperationFailure as e:
+        raise e
+    except Exception as e:
         raise e
     finally:
         client.close()
@@ -165,25 +139,26 @@ def post_final_standing_to_discord_webhook(all_winners_docs, winner, times_doc, 
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         raise e
+    except Exception as e:
+        raise e
 
 
 def main():
-    def main():
-        # Get the timestamp of the previous NYT Mini puzzle
-        current_nyt_mini_timestamp = get_previous_nyt_mini_timestamp()
-        # Print the timestamp to the console for debugging purposes
-        print(get_previous_nyt_mini_timestamp())
+    # Get the timestamp of the previous NYT Mini puzzle
+    current_nyt_mini_timestamp = get_previous_nyt_mini_timestamp()
+    # Print the timestamp to the console for debugging purposes
+    print(f"Previous puzzle: {str(current_nyt_mini_timestamp)}")
 
-        try:
-            # Update the winners collection with the latest puzzle times
-            all_winners_docs, winner, times_doc, weekday = update_winners_collection(
-                current_nyt_mini_timestamp)
-            # Post the final standings to a Discord webhook
-            post_final_standing_to_discord_webhook(
-                all_winners_docs, winner, times_doc, weekday)
+    try:
+        # Update the winners collection with the latest puzzle times
+        all_winners_docs, winner, times_doc, weekday = update_winners_collection(
+            current_nyt_mini_timestamp)
+        # Post the final standings to a Discord webhook
+        post_final_standing_to_discord_webhook(
+            all_winners_docs, winner, times_doc, weekday)
 
-        except Exception as e:
-            raise e
+    except Exception as e:
+        raise e
 
 
 main()

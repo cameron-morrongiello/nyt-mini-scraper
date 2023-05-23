@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup as soup
 import calendar
@@ -181,6 +181,8 @@ def enter_times_in_db(timestamp, weekday, entries) -> tuple:
         raise e
     except errors.OperationFailure as e:
         raise e
+    except Exception as e:
+        raise e
     finally:
         client.close()
 
@@ -216,6 +218,8 @@ def post_new_times_to_discord_webhook(new_times):
             # Check the response status code and raise an error if it indicates a failure
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
+            raise e
+        except Exception as e:
             raise e
 
 
@@ -259,6 +263,8 @@ def post_current_standing_to_discord_webhook(times_doc):
         # Check the response status code and raise an error if it indicates a failure
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
+        raise e
+    except Exception as e:
         raise e
 
 
