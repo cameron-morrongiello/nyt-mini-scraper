@@ -6,6 +6,7 @@ from pymongo import errors
 import os
 
 from utils import format_time, get_previous_nyt_mini_timestamp
+from stats import get_wins_data, post_pie_charts_to_discord_webhook, post_bar_chart_to_discord_webhook
 
 DAYS_OF_THE_WEEK = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -127,14 +128,13 @@ def post_final_standing_to_discord_webhook(all_winners_docs, winner, times_doc, 
             'embeds': [{
                 'title': f'Final {DAYS_OF_THE_WEEK[weekday]} Report',
                 'description': standing_str
-            }, {
-                'title': 'Overall Report',
-                'description': winner_str
             }]
         }
         # Send the POST request to the webhook URL
         response = requests.post(webhook_url, json=data)
-
+        usernames, wins = get_wins_data()
+        post_bar_chart_to_discord_webhook(wins, usernames)
+        post_pie_charts_to_discord_webhook()
         # Check the response status code and raise an error if it indicates a failure
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
